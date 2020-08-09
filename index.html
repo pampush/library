@@ -12,21 +12,24 @@
     <div class="grid-container"> 
       <div class="grid-container__header">
         <button class="header-button" type="button" value="createBook">Add new book</button>
-        <button class="header-button" type="button" value="deleteBook">Delete book</button>
+        <button class="header-button" type="button" value="sort">Sort books</button>
       </div>
       <div class="grid-container__main">
-        <div class="main-item"></div>
-        <div class="main-item"></div>
+        <div class="main-item">
+          <h1>Title</h1>
+          <h2>Author</h2>
+        </div>
+        
       </div>
       <div class="grid-container__side"></div>
       <div class="grid-container__footer"></div>
     </div>
     <div class="modal">
       <div class="modal-content">
-        <form action="" method="post">
-          <input type="text" placeholder="title"> 
-          <input type="text" placeholder="author">
-          <input type="text" placeholder="number of pages">
+        <form class="modal-form" action="" method="post">
+          <input type="text" name="title" placeholder="title">
+          <input type="text" name="author" placeholder="author">
+          <input type="text" name="numberOfPages" placeholder="number of pages">
           <div>
             <input type="radio" name="hasread" id="hasread-true" value="true">
             <label for="hasread-true">Read</label>

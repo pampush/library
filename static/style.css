@@ -3,6 +3,7 @@
   --main-color: #000;
   --main-font-size: 2rem; 
   --modal-bg-color: rgb(207, 207, 207);
+  --delete-button-color: rgb(255, 0, 0);
   --temp-bg-color: rgb(190, 231, 255);
   /* color variables */
 }
@@ -60,6 +61,7 @@ button {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  position: relative;
   height: 30rem;
   width: 20rem;
   margin: 1rem;
@@ -69,10 +71,38 @@ button {
   /* filter: drop-shadow(.1rem .1rem .5rem rgba(0, 0, 0, 0.3)); */
 }
 
+/* pseudo-elements are not part of the DOM  */
+/* .main-item:before {
+  display: block;
+  content: '';
+  height: 1.5rem;
+  width: 1.5rem; 
+  border-radius: 50%;
+  background-color: var(--delete-button-color);
+  box-shadow: .05rem 0 .2rem .1rem rgba(0,0,0,0.3);
+  position: absolute;
+  top: -.75rem;
+  right: -.75rem;
+} */
+.main-item__delete {
+  position: absolute;
+  top: -0.75rem;
+  right: -0.75rem;
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 50%;
+  background-color: var(--delete-button-color);
+  box-shadow: .05rem 0 .2rem .1rem rgba(0,0,0,0.3);
+}
+
 .main-item:hover {
   transform: perspective(100rem) rotateY(-10deg);
   box-shadow: -.2rem .1rem .5rem .1rem rgba(0,0,0,0.3); 
 }
+
+/* .main-item:hover:before {
+  box-shadow: -.05rem 0 .2rem .1rem rgba(0,0,0,0.3);
+} */
 
 .modal {
   display: none;

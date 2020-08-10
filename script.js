@@ -1,43 +1,40 @@
 function Library() {
-  this.myLibrary = [];
+  this.myLibrary = new Map();
 }
 
 Library.prototype.addBookToLibrary = function(book) {
   if(!book)
     return;
-  this.myLibrary.push(book);
+  this.myLibrary.set(Math.floor(Math.random()*Date.now()), book);
 }
 
-Library.prototype.render = function(parent, book) {
-  /* not list */
-  if(!(book && parent))
-    return
-  const div = document.createElement('div'), ul = document.createElement('ul'),
-        h1 = document.createElement('h1'), h2 = document.createElement('h2');
-  
-  h1.append(book.title);
-  h2.append(book.author);
-  
-  /*let spanArr = [];
-  
-   for(const [key, value] of Object.entries(book)) {
-    let span = document.createElement('span');
-    span.append(key + ': ' + value);
-    spanArr.push(span);
-   
-  }*/
-   
-  div.classList.add('main-item');
-  div.append(h1,h2);
-  parent.append(div);
-  /* const arr = ["div", "ul", 'li'];
-  let el = arr.reduceRight((el, n) => {
-    let d = document.createElement(n)
-    d.appendChild(el)
-    return d
-  }, document.createTextNode("Text Here"))
-  
-  document.getElementById('container').appendChild(el) */
+Library.prototype.deleteBook = function(index) {
+  if(typeof(index) != 'number')
+    index = +index;
+  this.myLibrary.delete(index);
+}
+
+Library.prototype.render = function(parent, library) {
+  while(parent.hasChildNodes()) 
+    parent.removeChild(parent.lastChild);
+
+  if(!(library && parent))
+    return;
+
+  for(let [key, book] of library) { 
+    const div = document.createElement('div'),
+          divDel = document.createElement('div'),
+          h1 = document.createElement('h1'), 
+          h2 = document.createElement('h2');
+    
+    h1.append(book.title);
+    h2.append(book.author);
+    divDel.classList.add('main-item__delete');
+    div.classList.add('main-item');
+    div.setAttribute('data-index', key);
+    div.append(divDel, h1, h2);
+    parent.append(div);
+  }
 }
 
 function Book(title, author, numberOfPages, hasRead, ...rest) {
@@ -45,7 +42,11 @@ function Book(title, author, numberOfPages, hasRead, ...rest) {
   this.author = author;
   this.numberOfPages = numberOfPages;
   this.hasRead = hasRead;
-  // the constructor...
+  //this.id = Book.prototype.generateID();
+}
+
+Book.prototype.generateID = function() {
+  return Math.floor(Math.random()*1000);
 }
 
 function getFormData(form) {
@@ -65,19 +66,13 @@ function getFormData(form) {
   }
   return book;
 }
-/* const addBookToLibrary = function() {
-  // do stuff here
-}
-
-const render = function() {
-
-} */
 
 const createBookButton = document.querySelector('button[value="createBook"]'),
       sortBookButton = document.querySelector('button[value="sort"]'),
       booksContainer = document.querySelector('.grid-container__main'),
       modalBox = document.querySelector('.modal'),
       modalBoxForm = document.querySelector('.modal-form'),
+      //bookItem = document.querySelector('.main-item'),
       library = new Library();
 
 createBookButton.addEventListener('click',  () => { 
@@ -91,11 +86,17 @@ modalBoxForm.addEventListener('submit', (e) => {
   const data = getFormData(e.target); 
   const book = new Book(...Object.values(data)); 
   library.addBookToLibrary(book); 
-  library.render(booksContainer, book);
+  library.render(booksContainer, library.myLibrary);
   modalBox.style.display = 'none';
   modalBoxForm.reset();
   /* check out formData object */
 });
 
+booksContainer.addEventListener('click', (e) => {
+  if(e.target.classList == 'main-item__delete') {
+    library.deleteBook(e.target.parentNode.dataset.index);
+    library.render(booksContainer, library.myLibrary);
+  }
+})
 
 

@@ -95,6 +95,23 @@ button {
   box-shadow: .05rem 0 .2rem .1rem rgba(0,0,0,0.3);
 }
 
+.main-item__readstatus {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 5rem;
+  height: 5rem;
+}
+
+.main-item__readstatus-true {
+  background-color: green;
+}
+.main-item__readstatus-false {
+  background-color: red;
+}
+
+
+
 .main-item:hover {
   transform: perspective(100rem) rotateY(-10deg);
   box-shadow: -.2rem .1rem .5rem .1rem rgba(0,0,0,0.3); 

@@ -1,14 +1,16 @@
 function Library() {
   this.myLibrary = new Map();
-  this.sortLib = new Map(); // bad decision
+  this.sortLib = new Map(); // bad approach?
 }
 
-Library.prototype.addBookToLibrary = function(book) {
+Library.prototype.addBookToLibrary = function(...book) {
   if(!book)
     return;
-  const key = Date.now();
-  this.myLibrary.set(key, book);
-  this.sortLib.set(key, book);
+  for(let item of book) {
+    const key = Date.now();
+    this.myLibrary.set(key, item);
+    this.sortLib.set(key, item);
+  }
 }
 
 Library.prototype.deleteBook = function(index) {
@@ -20,19 +22,20 @@ Library.prototype.deleteBook = function(index) {
 
 Library.prototype.sortBooks = function(callback) {
   //for big amount of items we need to pagination and slicing map/array;
-  this.sortLib = new Map([...this.myLibrary.entries()].sort((a, b) => b[1].hasRead - a[1].hasRead)) // true first
-    //return (a[1].hasRead === b[1].hasRead)? 0: a[1].hasRead? -1: 1;
+  this.sortLib = new Map([...this.myLibrary.entries()].sort((a, b) => b[1].readStatus - a[1].readStatus)) // true first
+    //return (a[1].readStatus === b[1].readStatus)? 0: a[1].readStatus? -1: 1;
 }
 
 Library.prototype.changeBook = function(bookStatusNode) {
   let parent = bookStatusNode;
+  console.log(this);
   while(parent.classList != 'main-item')
     parent = parent.parentNode;
   let book = library.myLibrary.get(+parent.dataset.index);
   
-  bookStatusNode.classList.remove(`main-item__readstatus-${book.hasRead}`);
-  book.hasRead = !book.hasRead;
-  bookStatusNode.classList.add(`main-item__readstatus-${book.hasRead}`)
+  bookStatusNode.classList.remove(`main-item__readstatus-${book.readStatus}`);
+  book.readStatus = !book.readStatus;
+  bookStatusNode.classList.add(`main-item__readstatus-${book.readStatus}`)
 }
 
 Library.prototype.render = function(parent) {
@@ -59,7 +62,7 @@ Library.prototype.render = function(parent) {
         <h2>${book.author}</h2>
         <div class="main-item__pages">${book.numberOfPages} pages</div>
         <div class="main-item__readstatus-container">
-          <div class="main-item__readstatus main-item__readstatus-${book.hasRead}"></div>
+          <div class="main-item__readstatus main-item__readstatus-${book.readStatus}"></div>
         </div>
     </div>`;
     /* const div = document.createElement('div'),
@@ -82,7 +85,7 @@ Library.prototype.render = function(parent) {
 
     divStatusContainer.classList.add('main-item__readstatus-container');
     divStatus.classList.add('main-item__readstatus');
-    divStatus.classList.add(`main-item__readstatus-${book.hasRead}`);
+    divStatus.classList.add(`main-item__readstatus-${book.readStatus}`);
     divStatusContainer.append(divStatus);
 
     divPages.append(`${book.numberOfPages} pages`);
@@ -95,31 +98,24 @@ Library.prototype.render = function(parent) {
   }
 }
 
-function Book(title, author, numberOfPages, hasRead, ...rest) {
+function Book(title, author, numberOfPages, readStatus, ...rest) {
   this.title = title;
   this.author = author;
   this.numberOfPages = numberOfPages;
-  this.hasRead = hasRead;
+  this.readStatus = readStatus;
 }
-
 
 function getFormData(form) {
   const book = {};
-  let checkedFlag = false;
   for(let item of form.elements) {
     if(item.type == 'text')
       book[item.name] = item.value; 
     /* change radio with tumbler. that is for learning */
-    if(item.type == 'radio' && !checkedFlag) {
-      if(item.checked) { 
-        checkedFlag = true;
-        if(item.value == 'true')
-          book[item.name] = true;
-        else
-          book[item.name] = false;
-      }
+    if(item.type == 'checkbox') {
+      if(item.checked)
+        book.readStatus = true;
       else
-        book[item.name] = false;
+        book.readStatus = false;
     }
   }
   return book;
@@ -154,10 +150,10 @@ sortBookButton.addEventListener('click', (e) => {
 modalBoxForm.addEventListener('submit', (e) => {
   e.preventDefault(); // client-server disabled 
   const data = getFormData(e.target); 
+  modalBox.style.display = 'none';  
   const book = new Book(...Object.values(data)); 
   library.addBookToLibrary(book); 
   library.render(booksContainer);
-  modalBox.style.display = 'none';  
   modalBoxForm.reset();
 });
 
@@ -173,9 +169,9 @@ booksContainer.addEventListener('click', (e) => {
   }
 })
 
-
-let obj = new Book('title', 'author', '123', true);
-library.addBookToLibrary(obj);
+let foo = () => { return [new Book('title', 'author', '123', true), new Book('asd','asd','123', true)]};
+let [obj1, obj2] = foo();
+library.addBookToLibrary(obj1, obj2);
 library.render(booksContainer);
 
 

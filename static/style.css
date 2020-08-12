@@ -4,9 +4,9 @@
   --main-bg-color: rgb(252, 251, 238);
   --main-color: #000000;
   --main-font-size: 2rem; 
-  --modal-bg-color: rgb(207, 207, 207);
-  --temp-bg-color: rgb(190, 231, 255);
-  /* color variables */
+  --modal-bg-color: rgb(252, 251, 238);
+  --header-button-color: #007bff;
+  --main-modal-border-color: #ced4da;
 }
 
 html {
@@ -28,17 +28,70 @@ body {
  display: grid;
  min-height: 100vh;
  grid-template-columns: 3fr 1fr;
- grid-template-rows: 10rem 1fr 10rem;
+ grid-template-rows: 15rem 1fr 10rem;
 }
 
 button {
-  /* font-size: 2rem; */
+  user-select: none;
+  cursor: pointer;
+  outline: none;
 }
 
 .grid-container__header {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  flex-wrap: wrap;
+  margin-left: 2rem;
+}
+
+.grid-container__header h1 {
+  flex-basis: 100%;
+  font-size: 6rem;
+  margin: 0;
+  color: var(--main-bg-color);
+  -webkit-text-stroke: .1rem var(--header-button-color);
+}
+
+.grid-container__header > button {
+  margin-right: 10rem;
+}
+
+button {
+  padding: 1rem;
+  color: var(--header-button-color);
+  background-color: transparent;
+  border: .1rem solid var(--header-button-color);
+  border-radius: .5rem;
+}
+
+.header-sort {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;  
+}
+
+.header-button-sort {
+  border-radius: 0;
+  margin: 0;
+}
+
+.header-button-sort.active {
+  color: #ffffff;
+  background-color: var(--header-button-color);
+}
+
+.header-button-sort:first-child {
+  border-radius: .5rem 0 0 .5rem ;
+}
+
+.header-button-sort:last-child {
+  border-radius: 0 .5rem .5rem 0;
+}
+
+button:hover {
+  color: #ffffff;
+  background-color: var(--header-button-color);
 }
 
 .grid-container__main {
@@ -47,7 +100,6 @@ button {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  padding: 1rem;
 }
 
 .grid-container__side {
@@ -133,6 +185,10 @@ button {
   box-shadow: 0 0 0.3rem 0.1rem rgba(0,0,0,0.3)
 }
 
+.main-item__readstatus:hover {
+  background-color: rgba(255,255,255,0.3);
+}
+
 .main-item__readstatus-true {
   background: url(check_circle_outline-24px.svg);
 }
@@ -145,9 +201,10 @@ button {
   position: fixed;
   top: 0;
   left: 0;
-  padding-top: 20rem;
   width: 100%;
   height: 100%;
+  padding-top: 20rem;
+  background-color: rgba(0,0,0,0.3);
   font-size: var(--main-font-size);
 }
 
@@ -156,10 +213,47 @@ button {
   width: 50rem;
   margin: 0 auto;
   padding: 2rem;
+  border: 1px solid var(--main-modal-border-color);
+  border-radius: .5rem;
   background-color: var(--modal-bg-color);
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.2);
   animation-name: animatetop;
   animation-duration: 0.4s;
+}
+
+.modal-form {
+  margin: 0;
+}
+
+.modal-form__group {
+  margin-bottom: 1rem;
+}
+
+.modal-form__group input {
+  display: block;
+  padding: 1rem;
+  border: 1px solid var(--main-modal-border-color);
+  border-radius: .5rem;  
+}
+
+.modal-form__group label {
+  display: inline-block;
+  margin-bottom: .5rem;
+}
+
+.modal-form__checkbox {
+  margin-bottom: 1rem;
+}
+
+.modal-form button[value="close"] {
+  border: 1px solid red;
+  color: var(--main-item-font-color);
+  background-color: red;
+} 
+
+.modal-form button[value="close"]:hover {
+  color: red;
+  background-color: transparent;
 }
 
 @keyframes animatetop {

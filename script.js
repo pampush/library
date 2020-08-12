@@ -6,10 +6,12 @@ function Library() {
 Library.prototype.addBookToLibrary = function(...book) {
   if(!book)
     return;
+  let index = 0;
   for(let item of book) {
-    const key = Date.now();
+    const key = Date.now()+index; 
     this.myLibrary.set(key, item);
     this.sortLib.set(key, item);
+    index++;
   }
 }
 
@@ -28,7 +30,6 @@ Library.prototype.sortBooks = function(callback) {
 
 Library.prototype.changeBook = function(bookStatusNode) {
   let parent = bookStatusNode;
-  console.log(this);
   while(parent.classList != 'main-item')
     parent = parent.parentNode;
   let book = library.myLibrary.get(+parent.dataset.index);
@@ -53,7 +54,7 @@ Library.prototype.render = function(parent) {
     parent.innerHTML += 
     `<div class="main-item" data-index="${key}">
       <div class="main-item__delete">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" viewBox="0 0 24 24">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#bc2121" viewBox="0 0 24 24">
           <path class="st0" d="M0,0h24v24H0V0z" fill="none"></path>
           <path d="M12,0C5.4,0,0,5.4,0,12s5.4,12,12,12s12-5.4,12-12S18.6,0,12,0z M17,13H7v-2h10V13z"></path>
         </svg>
@@ -65,36 +66,6 @@ Library.prototype.render = function(parent) {
           <div class="main-item__readstatus main-item__readstatus-${book.readStatus}"></div>
         </div>
     </div>`;
-    /* const div = document.createElement('div'),
-          divDel = document.createElement('div'),
-          divStatusContainer = document.createElement('div'),
-          divStatus = document.createElement('div'),
-          divPages = document.createElement('div'),
-          h1 = document.createElement('h1'), 
-          h2 = document.createElement('h2');
-
-
-    h1.append(book.title);
-    h2.append(book.author);
-
-    divDel.classList.add('main-item__delete');
-    divDel.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width:"20" height="20" fill="red" viewBox="0 0 24 24">
-    <path class="st0" d="M0,0h24v24H0V0z" fill="none"/>
-    <path d="M12,0C5.4,0,0,5.4,0,12s5.4,12,12,12s12-5.4,12-12S18.6,0,12,0z M17,13H7v-2h10V13z"/>
-    </svg>`;
-
-    divStatusContainer.classList.add('main-item__readstatus-container');
-    divStatus.classList.add('main-item__readstatus');
-    divStatus.classList.add(`main-item__readstatus-${book.readStatus}`);
-    divStatusContainer.append(divStatus);
-
-    divPages.append(`${book.numberOfPages} pages`);
-    divPages.classList.add('main-item__pages');
-
-    div.classList.add('main-item');
-    div.setAttribute('data-index', key);
-    div.append(divDel, h1, h2, divPages, divStatusContainer);
-    parent.append(div); */
   }
 }
 
@@ -122,11 +93,10 @@ function getFormData(form) {
 }
 
 const createBookButton = document.querySelector('button[value="createBook"]'),
-      sortBookButton = document.querySelector('button[value="sort"]'),
+      sortBookButton = document.querySelector('.header-sort'),
       booksContainer = document.querySelector('.grid-container__main'),
       modalBox = document.querySelector('.modal'),
       modalBoxForm = document.querySelector('.modal-form'),
-      //bookItem = document.querySelector('.main-item'),
       library = new Library(); // init with localStorage
 
 createBookButton.addEventListener('click',  () => { 
@@ -134,16 +104,44 @@ createBookButton.addEventListener('click',  () => {
   modalBox.querySelector('input').focus(); // first input 
 });
 
-sortBookButton.addEventListener('click', (e) => { 
-  if(booksContainer.dataset.sorted == 'true') {
-    sortBookButton.style.backgroundColor = "red";
+sortBookButton.addEventListener('click', (e) => {
+  if(e.target.classList.contains('active'))
+    return;
+  /* better just loop over button siblings looking for active class*/
+  for(let node of e.target.parentNode.children)
+    if(node.classList.contains('active')) {
+      node.classList.remove('active');
+      break;
+    }
+  
+  e.target.classList.add('active');
+  
+  if(e.target.value == 'default') {
     booksContainer.setAttribute('data-sorted', 'false');
-  }
-  else {
-    sortBookButton.style.backgroundColor = "green";
+  } else
+  if(e.target.value == 'read-status') {
+    booksContainer.setAttribute('data-sorted', 'true');
+    library.sortBooks();    
+  } else
+  { ; }
+   
+/* if we have big amount of items 
+  if(e.target.value == 'default') {
+    sortBookButton.querySelector(`button[value='${sortBookButton.dataset.sortoption}']`).classList.remove('active');
+    e.target.classList.add('active');
+    sortBookButton.setAttribute('data-sortoption', `${e.target.value}`);
+    booksContainer.setAttribute('data-sorted', 'false');
+  } else
+  if(e.target.value == 'read-status') {
+    sortBookButton.querySelector(`button[value='${sortBookButton.dataset.sortoption}']`).classList.remove('active');
+    e.target.classList.add('active');
+    sortBookButton.setAttribute('data-sortoption', `${e.target.value}`);
     booksContainer.setAttribute('data-sorted', 'true');
     library.sortBooks();
-  } 
+  } else
+  if(e.target.value == 'smth')
+    ; */
+
   library.render(booksContainer);
 });
 
@@ -155,6 +153,11 @@ modalBoxForm.addEventListener('submit', (e) => {
   library.addBookToLibrary(book); 
   library.render(booksContainer);
   modalBoxForm.reset();
+});
+
+modalBoxForm.addEventListener('click', (e) => {
+  if(e.target.value == 'close')
+    modalBox.style.display = 'none';
 });
 
 booksContainer.addEventListener('click', (e) => {
@@ -169,9 +172,15 @@ booksContainer.addEventListener('click', (e) => {
   }
 })
 
-let foo = () => { return [new Book('title', 'author', '123', true), new Book('asd','asd','123', true)]};
-let [obj1, obj2] = foo();
-library.addBookToLibrary(obj1, obj2);
+let booksGen = (num) => { 
+  let res = [];
+  while(num--) {
+    res.push(new Book('loremipsum', 'loremipsum', '123', Boolean(Math.floor(Math.random()+0.5))))
+  }
+  return res;
+};
+
+library.addBookToLibrary(...booksGen(5));
 library.render(booksContainer);
 
 

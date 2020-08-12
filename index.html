@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet"> -->
     <link rel="stylesheet" href="static/normalize.css">
     <link rel="stylesheet" href="static/style.css">
     <title>Library</title>
@@ -11,22 +11,18 @@
   <body>
     <div class="grid-container"> 
       <div class="grid-container__header">
+        <h1>Library</h1>
         <button class="header-button" type="button" value="createBook">Add new book</button>
-        <button class="header-button" type="button" value="sort">Sort by read status</button>
+        <div class="header-sort" data-sortoption="default">
+          <button class="header-button-sort active" type="button" value="default">Default</button>
+          <button class="header-button-sort" type="button" value="read-status">Sort by read status</button>
+          <button class="header-button-sort" type="button" value="smth">Sort smth</button>
+        </div>
       </div>
       <div class="grid-container__main">
-        <div class="main-item" data-index="1597145775034">
-          <div class="main-item__delete">
-            <!-- <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24"><path class="st0" d="M0,0h24v24H0V0z" fill="none"/><path d="M12,0C5.4,0,0,5.4,0,12s5.4,12,12,12s12-5.4,12-12S18.6,0,12,0z M17,13H7v-2h10V13z"/></svg> -->
-          </div>
-          <h1>Sasda</h1>
-          <h2>ASDdsdadasdasdada</h2>
-          <div class="main-item__pages">123 pages</div>
-          <div class="main-item__readstatus-container">
-            
-            <div class="main-item__readstatus main-item__readstatus-false"></div>
-          </div>
-        </div>
+        
+            <!-- content -->
+
       </div>
       <div class="grid-container__side"></div>
       <div class="grid-container__footer"></div>
@@ -34,15 +30,24 @@
     <div class="modal">
       <div class="modal-content">
         <form class="modal-form" action="" method="post">
-          <input type="text" name="title" placeholder="title"  maxlength="30" required>
-          <input type="text" name="author" placeholder="author" maxlength="30" required>
-          <input type="text" name="numberOfPages" placeholder="number of pages"  maxlength="5" required>
-          <div>
-            <input type="checkbox" name="read-status" id="readstatus-true" value="true">
-            <label for="readstatus-true">Read</label>
-            
+          <div class="modal-form__group">
+            <label for="title">Book title</label>
+            <input type="text" name="title" placeholder="title" id="title" maxlength="30" required>
+          </div>
+          <div class="modal-form__group">
+            <label for="author">Author</label>
+            <input type="text" name="author" placeholder="author" id="author" maxlength="30" required>
+          </div>
+          <div class="modal-form__group">
+            <label for="numpages">Number of pages</label>
+            <input type="text" name="numberOfPages" placeholder="number of pages" id="numpages" maxlength="5" required>
+          </div>
+          <div class="modal-form__checkbox">
+            <input type="checkbox" name="read-status" id="readstatus" value="true">
+            <label for="readstatus">Have you read it?</label>
           </div>
           <button type="submit">Add book</button> 
+          <button type="button" value="close">Close</button>
         </form> 
       </div>  
     </div>

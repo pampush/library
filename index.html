@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -16,7 +17,7 @@
         <div class="header-sort" data-sortoption="default">
           <button class="header-button-sort active" type="button" value="default">Default</button>
           <button class="header-button-sort" type="button" value="read-status">Sort by read status</button>
-          <button class="header-button-sort" type="button" value="smth">Sort smth</button>
+          <!-- <button class="header-button-sort" type="button" value="smth">Sort smth</button> -->
         </div>
       </div>
       <div class="grid-container__main">
@@ -41,6 +42,10 @@
           <div class="modal-form__group">
             <label for="numpages">Number of pages</label>
             <input type="text" name="numberOfPages" placeholder="number of pages" id="numpages" maxlength="5" required>
+          </div>
+          <div class="modal-form__group">
+            <label for="genre">Genre</label>
+            <input type="text" name="genre" placeholder="genre" id="genre" maxlength="10" required disabled>
           </div>
           <div class="modal-form__checkbox">
             <input type="checkbox" name="read-status" id="readstatus" value="true">

@@ -54,7 +54,7 @@ Library.prototype.render = function(parent) {
     parent.innerHTML += 
     `<div class="main-item" data-index="${key}">
       <div class="main-item__delete">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#bc2121" viewBox="0 0 24 24">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#ff0028" viewBox="0 0 24 24">
           <path class="st0" d="M0,0h24v24H0V0z" fill="none"></path>
           <path d="M12,0C5.4,0,0,5.4,0,12s5.4,12,12,12s12-5.4,12-12S18.6,0,12,0z M17,13H7v-2h10V13z"></path>
         </svg>
@@ -69,10 +69,11 @@ Library.prototype.render = function(parent) {
   }
 }
 
-function Book(title, author, numberOfPages, readStatus, ...rest) {
+function Book(title, author, numberOfPages, genre, readStatus, ...rest) {
   this.title = title;
   this.author = author;
   this.numberOfPages = numberOfPages;
+  this.genre = genre;
   this.readStatus = readStatus;
 }
 
@@ -156,8 +157,10 @@ modalBoxForm.addEventListener('submit', (e) => {
 });
 
 modalBoxForm.addEventListener('click', (e) => {
-  if(e.target.value == 'close')
+  if(e.target.value == 'close') {
     modalBox.style.display = 'none';
+    modalBoxForm.reset();
+  }
 });
 
 booksContainer.addEventListener('click', (e) => {
@@ -175,12 +178,10 @@ booksContainer.addEventListener('click', (e) => {
 let booksGen = (num) => { 
   let res = [];
   while(num--) {
-    res.push(new Book('loremipsum', 'loremipsum', '123', Boolean(Math.floor(Math.random()+0.5))))
+    res.push(new Book('loremipsum', 'loremipsum', '123', 'drama', Boolean(Math.floor(Math.random()+0.5))))
   }
   return res;
 };
 
-library.addBookToLibrary(...booksGen(5));
+library.addBookToLibrary(...booksGen(10));
 library.render(booksContainer);
-
-

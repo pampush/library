@@ -122,7 +122,8 @@ const createBookButton = document.querySelector('button[value="createBook"]'),
       sideBox = document.querySelector('.grid-container__side');
       library = new Library();
 createBookButton.addEventListener('click',  () => { 
-  modalBox.style.display = 'block'; 
+  document.body.style.overflow = 'hidden'; 
+  modalBox.style = 'display: flex;'; 
   modalBox.querySelector('input').focus(); // first input 
 });
 
@@ -169,7 +170,8 @@ sortBookButton.addEventListener('click', (e) => {
 modalBoxForm.addEventListener('submit', (e) => {
   e.preventDefault(); // client-server disabled 
   const data = getFormData(e.target); 
-  modalBox.style.display = 'none';  
+  modalBox.style.display = 'none';
+  document.body.style.overflow = '';  
   const book = new Book(...Object.values(data)); 
   library.addBookToLibrary(book); 
   library.render(booksContainer);
@@ -179,6 +181,7 @@ modalBoxForm.addEventListener('submit', (e) => {
 modalBoxForm.addEventListener('click', (e) => {
   if(e.target.value == 'close') {
     modalBox.style.display = 'none';
+    document.body.style.overflow = '';
     modalBoxForm.reset();
   }
 });
@@ -217,7 +220,7 @@ sideBox.addEventListener('touchstart', startTouch);
 sideBox.addEventListener('touchmove', moveTouch);
 
 let initialX = null;
-  let initialY = null;
+let initialY = null;
 
   function startTouch(e) {
     initialX = e.touches[0].clientX;

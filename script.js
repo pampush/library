@@ -11,8 +11,24 @@ Library.prototype.addBookToLibrary = function(...book) {
     const key = Date.now()+index; 
     this.myLibrary.set(key, item);
     this.sortLib.set(key, item);
+    localStorage.setItem(key, JSON.stringify(item))
     index++;
   }
+}
+
+/* code getter/setter */
+Library.prototype.getBook = function(index) {
+  if(typeof(index) != 'number')
+    index = +index;
+  return this.myLibrary.get(index);
+}
+
+Library.prototype.initLibrary = function(key, book) {
+  if(!book)
+    return;
+  
+    this.myLibrary.set(key, book);
+    this.sortLib.set(key, book);   
 }
 
 Library.prototype.deleteBook = function(index) {
@@ -20,11 +36,16 @@ Library.prototype.deleteBook = function(index) {
     index = +index;
   this.myLibrary.delete(index);
   this.sortLib.delete(index);
+  localStorage.removeItem(index);
 }
 
+/** 
+ * since render() func renders book items backwards (new item at the beginning), this func should sort 
+ * items backwards also 
+ */ 
 Library.prototype.sortBooks = function(callback) {
-  //for big amount of items we need to pagination and slicing map/array;
-  this.sortLib = new Map([...this.myLibrary.entries()].sort((a, b) => b[1].readStatus - a[1].readStatus)) // true first
+   // false first to render true first
+  this.sortLib = new Map([...this.myLibrary.entries()].sort((a, b) => a[1].readStatus - b[1].readStatus))
     //return (a[1].readStatus === b[1].readStatus)? 0: a[1].readStatus? -1: 1;
 }
 
@@ -32,11 +53,11 @@ Library.prototype.changeBook = function(bookStatusNode) {
   let parent = bookStatusNode;
   while(parent.classList != 'main-item')
     parent = parent.parentNode;
-  let book = library.myLibrary.get(+parent.dataset.index);
+  let book = this.myLibrary.get(+parent.dataset.index);
   
-  bookStatusNode.classList.remove(`main-item__readstatus-${book.readStatus}`);
+  bookStatusNode.classList.toggle('false');
   book.readStatus = !book.readStatus;
-  bookStatusNode.classList.add(`main-item__readstatus-${book.readStatus}`)
+  localStorage.setItem(+parent.dataset.index, JSON.stringify(book));
 }
 
 Library.prototype.render = function(parent) {
@@ -51,7 +72,7 @@ Library.prototype.render = function(parent) {
     library = this.sortLib;
 
   for(let [key, book] of library) { 
-    parent.innerHTML += 
+    parent.innerHTML = 
     `<div class="main-item" data-index="${key}">
       <div class="main-item__delete">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#ff0028" viewBox="0 0 24 24">
@@ -63,17 +84,18 @@ Library.prototype.render = function(parent) {
         <h2>${book.author}</h2>
         <div class="main-item__pages">${book.numberOfPages} pages</div>
         <div class="main-item__readstatus-container">
-          <div class="main-item__readstatus main-item__readstatus-${book.readStatus}"></div>
+          <div class="main-item__readstatus ${book.readStatus?'':false}"></div>
         </div>
-    </div>`;
+    </div>` + parent.innerHTML;
   }
 }
 
-function Book(title, author, numberOfPages, genre, readStatus, ...rest) {
+function Book(title, author, numberOfPages, genre, description, readStatus, ...rest) {
   this.title = title;
   this.author = author;
   this.numberOfPages = numberOfPages;
   this.genre = genre;
+  this.description = description;
   this.readStatus = readStatus;
 }
 
@@ -82,7 +104,6 @@ function getFormData(form) {
   for(let item of form.elements) {
     if(item.type == 'text')
       book[item.name] = item.value; 
-    /* change radio with tumbler. that is for learning */
     if(item.type == 'checkbox') {
       if(item.checked)
         book.readStatus = true;
@@ -98,8 +119,8 @@ const createBookButton = document.querySelector('button[value="createBook"]'),
       booksContainer = document.querySelector('.grid-container__main'),
       modalBox = document.querySelector('.modal'),
       modalBoxForm = document.querySelector('.modal-form'),
-      library = new Library(); // init with localStorage
-
+      sideBox = document.querySelector('.grid-container__side');
+      library = new Library();
 createBookButton.addEventListener('click',  () => { 
   modalBox.style.display = 'block'; 
   modalBox.querySelector('input').focus(); // first input 
@@ -108,7 +129,6 @@ createBookButton.addEventListener('click',  () => {
 sortBookButton.addEventListener('click', (e) => {
   if(e.target.classList.contains('active'))
     return;
-  /* better just loop over button siblings looking for active class*/
   for(let node of e.target.parentNode.children)
     if(node.classList.contains('active')) {
       node.classList.remove('active');
@@ -172,16 +192,84 @@ booksContainer.addEventListener('click', (e) => {
     library.changeBook(e.target);
   }else
   if(e.target.classList == 'main-item') {
-  }
+    let book = library.getBook(e.target.dataset.index);
+    if(sideBox.dataset.index == e.target.dataset.index || !sideBox.dataset.index)
+      sideBox.classList.toggle('hidden');
+    else
+      sideBox.classList.remove('hidden');
+
+    sideBox.setAttribute('data-index', e.target.dataset.index);
+    setTimeout(() => {
+      sideBox.firstElementChild.innerHTML = `
+        <h1>Title</h1>
+        <div>${book.title}</div>
+        <h1>Author</h1>
+        <div>${book.author}</div>
+        <h1>Description</h1>
+        <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit, enim eum excepturi adipisci modi aliquid repellat tempora ex quae eos error ducimus ratione facere reprehenderit ipsa fugiat ullam nihil? Delectus.</div>`;
+      }, 200);
+  } else {
+      sideBox.classList.add('hidden');
+    }
 })
 
-let booksGen = (num) => { 
-  let res = [];
-  while(num--) {
-    res.push(new Book('loremipsum', 'loremipsum', '123', 'drama', Boolean(Math.floor(Math.random()+0.5))))
-  }
-  return res;
-};
+sideBox.addEventListener('touchstart', startTouch);
+sideBox.addEventListener('touchmove', moveTouch);
 
-library.addBookToLibrary(...booksGen(10));
+let initialX = null;
+  let initialY = null;
+
+  function startTouch(e) {
+    initialX = e.touches[0].clientX;
+    initialY = e.touches[0].clientY;
+  };
+
+  function moveTouch(e) {
+    if (initialX === null) {
+      return;
+    }
+
+    if (initialY === null) {
+      return;
+    }
+
+    let currentX = e.touches[0].clientX;
+    let currentY = e.touches[0].clientY;
+
+    let diffX = initialX - currentX;
+    let diffY = initialY - currentY;
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      // sliding horizontally
+      if (diffX > 0) {
+        // swiped left
+        console.log("swiped left");
+      } else {
+        // swiped right
+        sideBox.classList.add('hidden');
+      }  
+    } else {
+      // sliding vertically
+      if (diffY > 0) {
+        // swiped up
+        console.log("swiped up");
+      } else {
+        // swiped down
+        console.log("swiped down");
+      }  
+    }
+
+    initialX = null;
+    initialY = null;
+
+    e.preventDefault();
+  };
+
+/**
+ *  books init of localStorage   
+*/ 
+for(let [key, item] of Object.entries(localStorage)) {
+  library.initLibrary(+key, new Book(...Object.values(JSON.parse(item))));    
+}
+
 library.render(booksContainer);

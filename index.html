@@ -25,7 +25,11 @@
             <!-- content -->
 
       </div>
-      <div class="grid-container__side"></div>
+      <div class="grid-container__side hidden">
+        <div class="side-sticky">
+
+        </div>
+      </div>
       <div class="grid-container__footer"></div>
     </div>
     <div class="modal">
@@ -45,7 +49,11 @@
           </div>
           <div class="modal-form__group">
             <label for="genre">Genre</label>
-            <input type="text" name="genre" placeholder="genre" id="genre" maxlength="10" required disabled>
+            <input type="text" name="genre" placeholder="genre" id="genre" maxlength="10" disabled>
+          </div>
+          <div class="modal-form__group">
+            <label for="description">Description</label>
+            <input type="text" name="description" placeholder="description" id="description" disabled>
           </div>
           <div class="modal-form__checkbox">
             <input type="checkbox" name="read-status" id="readstatus" value="true">

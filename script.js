@@ -123,7 +123,7 @@ const createBookButton = document.querySelector('button[value="createBook"]'),
       library = new Library();
 createBookButton.addEventListener('click',  () => { 
   document.body.style.overflow = 'hidden'; 
-  modalBox.style = 'display: flex;'; 
+  modalBox.style = 'display: block;'; 
   modalBox.querySelector('input').focus(); // first input 
 });
 

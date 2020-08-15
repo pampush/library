@@ -236,15 +236,16 @@ button:hover {
   top: 0;
   bottom: 0;
   width: 100%;
+  padding-top: 5rem;
+  overflow: auto;
   align-items: center;
-  padding-top: 10rem;
   background-color: rgba(0,0,0,0.3);
   font-size: var(--main-font-size);
 }
 
 .modal-content {
   position: relative;
-  width: 50rem;
+  max-width: 40rem;
   margin: 0 auto;
   padding: 2rem;
   border: 1px solid var(--main-modal-border-color);

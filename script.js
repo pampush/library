@@ -71,8 +71,12 @@ Library.prototype.render = function(parent) {
   if(parent.dataset.sorted == 'true')
     library = this.sortLib;
 
-  for(let [key, book] of library) { 
-    parent.innerHTML = 
+  for(let [key, book] of library) {  
+    /* parent.innerHTML+= str forces browser to rebuild whole parent DOM  
+    * better: div = document.createElement(div); div.innerHTML = str; parent.append(div);
+    * or insertAdjacentHTML which is devoid of innerHTML problem 
+    */  
+    parent.insertAdjacentHTML('afterbegin', 
     `<div class="main-item" data-index="${key}">
       <div class="main-item__delete">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#ff0028" viewBox="0 0 24 24">
@@ -86,7 +90,7 @@ Library.prototype.render = function(parent) {
         <div class="main-item__readstatus-container">
           <div class="main-item__readstatus ${book.readStatus?'':false}"></div>
         </div>
-    </div>` + parent.innerHTML;
+    </div>`);
   }
 }
 

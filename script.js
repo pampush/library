@@ -77,19 +77,21 @@ Library.prototype.render = function(parent) {
     * or insertAdjacentHTML which is devoid of innerHTML problem 
     */  
     parent.insertAdjacentHTML('afterbegin', 
-    `<div class="main-item" data-index="${key}">
-      <div class="main-item__delete">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#ff0028" viewBox="0 0 24 24">
-          <path class="st0" d="M0,0h24v24H0V0z" fill="none"></path>
-          <path d="M12,0C5.4,0,0,5.4,0,12s5.4,12,12,12s12-5.4,12-12S18.6,0,12,0z M17,13H7v-2h10V13z"></path>
-        </svg>
-        </div>
-        <h1>${book.title}</h1>
-        <h2>${book.author}</h2>
-        <div class="main-item__pages">${book.numberOfPages} pages</div>
-        <div class="main-item__readstatus-container">
-          <div class="main-item__readstatus ${book.readStatus?'':false}"></div>
-        </div>
+    `<div class="main-item__flex"> 
+      <div class="main-item" data-index="${key}">
+        <div class="main-item__delete">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#ff0028" viewBox="0 0 24 24">
+            <path class="st0" d="M0,0h24v24H0V0z" fill="none"></path>
+            <path d="M12,0C5.4,0,0,5.4,0,12s5.4,12,12,12s12-5.4,12-12S18.6,0,12,0z M17,13H7v-2h10V13z"></path>
+          </svg>
+          </div>
+          <h1>${book.title}</h1>
+          <h2>${book.author}</h2>
+          <div class="main-item__pages">${book.numberOfPages} pages</div>
+          <div class="main-item__readstatus-container">
+            <div class="main-item__readstatus ${book.readStatus?'':false}"></div>
+          </div>
+      </div>
     </div>`);
   }
 }

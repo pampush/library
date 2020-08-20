@@ -32,7 +32,6 @@ body {
 
 .grid-container {
   display: grid;
-  min-height: 100vh;
   grid-template-columns: 3fr 1fr;
   grid-template-rows: 15rem 1fr;
   overflow: hidden;
@@ -41,7 +40,7 @@ body {
 button {
   user-select: none;
   cursor: pointer;
-  outline: none;
+  /*FIXME: thin? outline: none;  */ 
 }
 
 .grid-container__header {
@@ -105,14 +104,14 @@ button:hover {
   grid-row: 2;
   grid-column: 1;
   
-  /* TODO: display: flex;
-  flex-wrap: wrap; */
+  display: flex;
+  flex-wrap: wrap; 
 
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(3, 1fr); 
   grid-template-rows: max-content;
   justify-items: center;
-  align-items: center;
+  align-items: center; */
   margin-top: 5rem;
 }
 
@@ -135,12 +134,13 @@ button:hover {
   top: 15rem;
 }
 
-.grid-container__footer {
-  background-color: ;
+.main-item__flex {
+  flex-basis: 33%;
+  display: flex;
+  justify-content: center;
 }
 
 .main-item {
-  /*TODO: flex-basis: 30% / 50% */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -158,13 +158,13 @@ button:hover {
   transition: ease .2s;
 }
 
-.main-item:hover {
+.main-item:focus {
  /*  transform: perspective(100rem) rotateY(-10deg);  */
   transform: scale(1.05);
   /* box-shadow: -.2rem .1rem .5rem .1rem rgba(0,0,0,0.3);  */
 }
-
-.main-item:hover .main-item__delete {
+.main-item:focus { color: red;}
+.main-item:focus .main-item__delete {
   display: block;
 }
 
@@ -301,27 +301,12 @@ button:hover {
   background-color: transparent;
 }
 
- 
-/*@media screen and (min-width: 0px) {
-  body {
-    font-size: var(--media-576-font-size);
-  }
-  .grid-container {
-    grid-template-columns: 1.5fr 1fr;
-  }
-  .grid-container__header h1 {
-    font-size: 4rem;
-  }
-  .main-item {
-    height: 20rem;
-    width: 15rem;
-    margin: 1rem;
-  }
-  .main-item__readstatus {
-    width: 3rem;
-    height: 3rem;
-  }
-} */
+
+
+
+
+
+
 
 @media screen and (max-width: 1200px) {
   .main-item {
@@ -335,8 +320,8 @@ button:hover {
   body {
     font-size: 1.5rem;
   }
-  .grid-container__main {
-    grid-template-columns: repeat(2, 1fr);
+  .main-item__flex {
+    flex-basis: 50%;
   }
 
   .main-item {
@@ -359,9 +344,7 @@ button:hover {
   .grid-container {
     grid-template-columns: 1fr;
   }
-  .grid-container__main {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  
   .grid-container__header h1 {
     font-size: 4rem;
   }
@@ -374,8 +357,16 @@ button:hover {
     width: 3rem;
     height: 3rem;
   }
+  .grid-container__side {
+    width: 50%;
+    position: fixed;
+    top: 0;
+    bottom:0;
+    right: 0;
+    color: white;
+    background-color: rgba(0,0,0,0.5);
+  }
 }
-
 
 @media screen and (max-width: 576px ) {
   body {

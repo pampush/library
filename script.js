@@ -127,8 +127,9 @@ const createBookButton = document.querySelector('button[value="createBook"]'),
       modalBoxForm = document.querySelector('.modal-form'),
       sideBox = document.querySelector('.grid-container__side');
       library = new Library();
+
 createBookButton.addEventListener('click',  () => { 
-  document.body.style.overflow = 'hidden'; 
+  //document.body.style.overflow = 'hidden'; 
   modalBox.style = 'display: block;'; 
   modalBox.querySelector('input').focus(); // first input 
 });
@@ -217,62 +218,63 @@ booksContainer.addEventListener('click', (e) => {
         <h1>Description</h1>
         <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit, enim eum excepturi adipisci modi aliquid repellat tempora ex quae eos error ducimus ratione facere reprehenderit ipsa fugiat ullam nihil? Delectus.</div>`;
       }, 200);
-  } else {
-      sideBox.classList.add('hidden');
+  }else {
+     sideBox.classList.add('hidden');
     }
 })
 
+/* swipe detection from so */
 sideBox.addEventListener('touchstart', startTouch);
 sideBox.addEventListener('touchmove', moveTouch);
 
 let initialX = null;
 let initialY = null;
 
-  function startTouch(e) {
-    initialX = e.touches[0].clientX;
-    initialY = e.touches[0].clientY;
-  };
+function startTouch(e) {
+  initialX = e.touches[0].clientX;
+  initialY = e.touches[0].clientY;
+};
 
-  function moveTouch(e) {
-    if (initialX === null) {
-      return;
-    }
+function moveTouch(e) {
+  if (initialX === null) {
+    return;
+  }
 
-    if (initialY === null) {
-      return;
-    }
+  if (initialY === null) {
+    return;
+  }
 
-    let currentX = e.touches[0].clientX;
-    let currentY = e.touches[0].clientY;
+  let currentX = e.touches[0].clientX;
+  let currentY = e.touches[0].clientY;
 
-    let diffX = initialX - currentX;
-    let diffY = initialY - currentY;
+  let diffX = initialX - currentX;
+  let diffY = initialY - currentY;
 
-    if (Math.abs(diffX) > Math.abs(diffY)) {
-      // sliding horizontally
-      if (diffX > 0) {
-        // swiped left
-        console.log("swiped left");
-      } else {
-        // swiped right
-        sideBox.classList.add('hidden');
-      }  
+  if (Math.abs(diffX) > Math.abs(diffY)) {
+    // sliding horizontally
+    if (diffX > 0) {
+      // swiped left
+      console.log("swiped left");
     } else {
-      // sliding vertically
-      if (diffY > 0) {
-        // swiped up
-        console.log("swiped up");
-      } else {
-        // swiped down
-        console.log("swiped down");
-      }  
-    }
+      // swiped right
+      sideBox.classList.add('hidden');
+    }  
+  } else {
+    // sliding vertically
+    if (diffY > 0) {
+      // swiped up
+      console.log("swiped up");
+    } else {
+      // swiped down
+      console.log("swiped down");
+    }  
+  }
 
-    initialX = null;
-    initialY = null;
+  initialX = null;
+  initialY = null;
 
-    e.preventDefault();
-  };
+  e.preventDefault();
+};
 
 /**
  *  books init of localStorage   

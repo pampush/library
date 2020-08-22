@@ -158,13 +158,13 @@ button:hover {
   transition: ease .2s;
 }
 
-.main-item:focus {
+.main-item:hover {
  /*  transform: perspective(100rem) rotateY(-10deg);  */
   transform: scale(1.05);
   /* box-shadow: -.2rem .1rem .5rem .1rem rgba(0,0,0,0.3);  */
 }
-.main-item:focus { color: red;}
-.main-item:focus .main-item__delete {
+
+.main-item:hover .main-item__delete {
   display: block;
 }
 
